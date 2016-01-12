@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -58,9 +59,9 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
     protected static final float MAX_TEXT_SCALE_DELTA = 0.3f;
 
     private ViewPager mPager;
-    private NavigationAdapter mPagerAdapter;
+    public NavigationAdapter mPagerAdapter;
     private SlidingTabLayout mSlidingTabLayout;
-    private int mFlexibleSpaceHeight;
+    public int mFlexibleSpaceHeight;
     private int mTabHeight;
 
     @Override
@@ -68,9 +69,25 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flexiblespacewithimagewithviewpagertab);
 
-        mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new NavigationAdapter(getSupportFragmentManager(),mPager);
         mPager.setAdapter(mPagerAdapter);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mFlexibleSpaceHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mTabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
 
@@ -97,8 +114,9 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
      * They all call this method even when they are inactive
      * but this Activity should listen only the active child,
      * so each Fragments will pass themselves for Activity to check if they are active.
+     * 当前fragment才会成功调用activity的这个方法
      *
-     * @param scrollY scroll position of Scrollable
+     * @param scrollY scroll position of Scrollable flex image 完全时，滚动值为0，上滑滚动为正
      * @param s       caller Scrollable view
      */
     public void onScrollChanged(int scrollY, Scrollable s) {
@@ -119,6 +137,7 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
             // This method is called by not only the current fragment but also other fragments
             // when their scrollY is changed.
             // So we need to check the caller(S) is the current fragment.
+            Log.e("","activity scrollY："+scrollY);
             int adjustedScrollY = Math.min(scrollY, mFlexibleSpaceHeight - mTabHeight);
             translateTab(adjustedScrollY, false);
             propagateScroll(adjustedScrollY);
@@ -196,11 +215,17 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
             FlexibleSpaceWithImageBaseFragment f =
                     (FlexibleSpaceWithImageBaseFragment) mPagerAdapter.getItemAt(i);
             if (f == null) {
+                if (i==0){
+                    com.cy.app.Log.e("fragment 0 is null");
+                }
                 continue;
             }
 
             View view = f.getView();
             if (view == null) {
+                if (i==0){
+                    com.cy.app.Log.e("fragment 0 view is null");
+                }
                 continue;
             }
             f.setScrollY(scrollY, mFlexibleSpaceHeight);
@@ -212,31 +237,35 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
      * This adapter provides three types of fragments as an example.
      * {@linkplain #createItem(int)} should be modified if you use this example for your app.
      */
-    private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
+    public static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Applepie", "Butter Cookie", "Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread", "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop"};
+        private static final String[] TITLES = new String[]{"GridView", "WebViewTv", "RecyclerView", "ListView", "ScrollView"/*, "Froyo", "Gingerbread", "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop"*/};
 
         private int mScrollY;
 
-        public NavigationAdapter(FragmentManager fm) {
+        public NavigationAdapter(FragmentManager fm,ViewPager viewPager) {
             super(fm);
+            viewPager.setOffscreenPageLimit(TITLES.length);
         }
 
         public void setScrollY(int scrollY) {
             mScrollY = scrollY;
         }
+        public int getScrollY() {
+            return mScrollY;
+        }
 
         @Override
         protected Fragment createItem(int position) {
             FlexibleSpaceWithImageBaseFragment f;
-            final int pattern = position % 4;
+            final int pattern = position % 5;
             switch (pattern) {
                 case 0: {
-                    f = new FlexibleSpaceWithImageScrollViewFragment();
+                    f = new FlexibleSpaceWithImageGridViewFragment();
                     break;
                 }
                 case 1: {
-                    f = new FlexibleSpaceWithImageListViewFragment();
+                    f = new FlexibleSpaceWithImageWebViewFragment();
                     break;
                 }
                 case 2: {
@@ -244,8 +273,11 @@ public class FlexibleSpaceWithImageWithViewPagerTabActivity extends BaseActivity
                     break;
                 }
                 case 3:
+                    f = new FlexibleSpaceWithImageListViewFragment();
+                    break;
                 default: {
-                    f = new FlexibleSpaceWithImageGridViewFragment();
+
+                    f = new FlexibleSpaceWithImageScrollViewFragment();
                     break;
                 }
             }

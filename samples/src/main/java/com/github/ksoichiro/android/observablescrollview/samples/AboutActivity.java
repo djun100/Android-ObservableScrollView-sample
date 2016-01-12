@@ -42,8 +42,8 @@ public class AboutActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setHomeButtonEnabled(true);
         }
-        ((TextView) findViewById(R.id.app_version)).setText(getString(R.string.msg_app_version, getVersionName(), VersionInfo.BUILD));
-        ((TextView) findViewById(R.id.lib_version)).setText(getString(R.string.msg_lib_version, VersionInfo.LIBRARY_VERSION));
+//        ((TextView) findViewById(R.id.app_version)).setText(getString(R.string.msg_app_version, getVersionName(), VersionInfo.BUILD));
+//        ((TextView) findViewById(R.id.lib_version)).setText(getString(R.string.msg_lib_version, VersionInfo.LIBRARY_VERSION));
 
         initLicenses();
     }

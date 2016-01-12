@@ -1,26 +1,29 @@
 apply plugin: 'com.android.application'
 
 // for using SNAPSHOT
-//repositories {
-//    maven {
-//        url uri('https://oss.sonatype.org/content/repositories/snapshots/')
-//    }
-//}
+repositories {
+    maven {
+//        url uri('https://oss.sonatype.org/content/repositories/snapshots/'
+        url "https://jitpack.io"
+    }
+}
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.melnykov:floatingactionbutton:1.0.7'
+    compile 'com.jakewharton.scalpel:scalpel:1.1.2'
     debugCompile project(':library')
     // Release build uses the synced latest version
     releaseCompile "com.github.ksoichiro:android-observablescrollview:${SYNCED_VERSION_NAME}"
 
     // for using SNAPSHOT
     //compile "com.github.ksoichiro:android-observablescrollview:$VERSION_NAME"
+    compile 'com.github.djun100:UtilAndroid:cdb2bd343a5f0203bf77a29f128daeedda067da5'
 }
 
-apply from: "${rootDir}/gradle/version.gradle"
-project.ext.versionInfo.releaseVersionName = SYNCED_VERSION_NAME
+//apply from: "${rootDir}/gradle/version.gradle"
+//project.ext.versionInfo.releaseVersionName = SYNCED_VERSION_NAME
 
 android {
     compileSdkVersion 23
@@ -91,11 +94,11 @@ android {
     }
 
     // Rename APK files
-    applicationVariants.all { variant ->
-        def output = variant.outputs.get(0)
-        File apk = output.outputFile
-        String newName = output.outputFile.name.replace(".apk", "-${variant.mergedFlavor.versionCode}-${variant.mergedFlavor.versionName}-${project.ext.versionInfo.build}.apk")
-                .replace("app-", "${variant.mergedFlavor.applicationId}-")
-        output.outputFile = new File(apk.parentFile, newName)
-    }
+//    applicationVariants.all { variant ->
+//        def output = variant.outputs.get(0)
+//        File apk = output.outputFile
+//        String newName = output.outputFile.name.replace(".apk", "-${variant.mergedFlavor.versionCode}-${variant.mergedFlavor.versionName}-${project.ext.versionInfo.build}.apk")
+//                .replace("app-", "${variant.mergedFlavor.applicationId}-")
+//        output.outputFile = new File(apk.parentFile, newName)
+//    }
 }

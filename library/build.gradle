@@ -48,9 +48,9 @@ afterEvaluate { project ->
     }
 }
 
-apply plugin: 'com.github.kt3k.coveralls'
+//apply plugin: 'com.github.kt3k.coveralls'
 
-coveralls.jacocoReportPath = 'build/reports/coverage/debug/report.xml'
+//coveralls.jacocoReportPath = 'build/reports/coverage/debug/report.xml'
 
 // This is from 'https://github.com/chrisbanes/gradle-mvn-push'
 apply from: "${rootDir}/gradle/gradle-mvn-push.gradle"

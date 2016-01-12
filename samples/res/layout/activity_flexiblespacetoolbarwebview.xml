@@ -32,7 +32,7 @@
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:scrollbars="none"
                 />
@@ -44,14 +44,14 @@
         android:id="@+id/flexible_space"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/primary"/>
+        android:background="#ffff00"/>
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#4000ffff"
         android:minHeight="?attr/actionBarSize"
         app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
         app:theme="@style/Toolbar"/>
@@ -60,6 +60,7 @@
     android:layout_marginLeft on FrameLayout seems to be ignored on Android 2.3
     so add a parent RelativeLayout and set padding to it.
     -->
+    <!--标题随距离大小变动层-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,23 +74,24 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:minHeight="?attr/actionBarSize"
-            android:textColor="@android:color/white"
+            android:textColor="#ff0000"
             android:textSize="20sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#20000000"
             android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"/>
+                android:background="#80ffffff"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_height"
-                android:background="@android:color/transparent"/>
+                android:background="#50000000"/>
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

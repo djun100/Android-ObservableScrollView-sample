@@ -19,8 +19,11 @@ package com.github.ksoichiro.android.observablescrollview.samples;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -37,7 +40,7 @@ public class FlexibleSpaceToolbarWebViewActivity extends BaseActivity implements
     private TextView mTitleView;
     private int mFlexibleSpaceHeight;
     private View mWebViewContainer;
-
+    WebView mWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,25 +60,38 @@ public class FlexibleSpaceToolbarWebViewActivity extends BaseActivity implements
 
         mWebViewContainer = findViewById(R.id.webViewContainer);
 
-        final ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
-        scrollView.setScrollViewCallbacks(this);
+//        final ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scroll);
+//        scrollView.setScrollViewCallbacks(this);
+        final ObservableScrollView observableWebView = (ObservableScrollView) findViewById(R.id.scroll);
+        observableWebView.setScrollViewCallbacks(this);
 
-        WebView webView = (WebView) findViewById(R.id.webView);
-        webView.loadUrl("file:///android_asset/lipsum.html");
+        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+            }
+        });
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.loadUrl("file:///android_asset/lipsum.html");
+
 
         mFlexibleSpaceHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_height);
         int flexibleSpaceAndToolbarHeight = mFlexibleSpaceHeight + getActionBarSize();
 
-        final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) webView.getLayoutParams();
+        final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mWebView.getLayoutParams();
         layoutParams.topMargin = flexibleSpaceAndToolbarHeight;
-        webView.setLayoutParams(layoutParams);
+        mWebView.setLayoutParams(layoutParams);
 
         mFlexibleSpaceView.getLayoutParams().height = flexibleSpaceAndToolbarHeight;
 
-        ScrollUtils.addOnGlobalLayoutListener(mTitleView, new Runnable() {
+        ScrollUtils.addOnGlobalLayoutListener(mWebView, new Runnable() {
+//        ScrollUtils.addOnGlobalLayoutListener(mTitleView, new Runnable() {
             @Override
             public void run() {
-                updateFlexibleSpaceText(scrollView.getCurrentScrollY());
+
+                updateFlexibleSpaceText(observableWebView.getCurrentScrollY());
             }
         });
     }
@@ -113,6 +129,7 @@ public class FlexibleSpaceToolbarWebViewActivity extends BaseActivity implements
     }
 
     private void adjustTopMargin(View view, int topMargin) {
+        Log.e("","adjustTopMargin:"+topMargin);
         final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
 
         if (layoutParams.topMargin == topMargin) {
