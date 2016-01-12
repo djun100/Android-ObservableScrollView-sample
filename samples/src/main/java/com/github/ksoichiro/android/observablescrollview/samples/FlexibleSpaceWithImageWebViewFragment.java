@@ -107,7 +107,7 @@ public class FlexibleSpaceWithImageWebViewFragment extends FlexibleSpaceWithImag
     /**父类的onScrollChanged调用,只做父布局的flex处理*/
     @Override
     protected void updateFlexibleSpace(int scrollY, View view) {
-        if (scrollY==720){
+        if (scrollY==mFlexibleSpaceHeight){
             int y= ((FlexibleSpaceWithImageWithViewPagerTabActivity)getActivity()).mPagerAdapter.getScrollY();
             scrollView.scrollTo(0, (int)ScrollUtils.getFloat(y,0,mFlexibleSpaceHeight));
             return;
